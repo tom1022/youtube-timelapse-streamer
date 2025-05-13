@@ -1,0 +1,13 @@
+# json
+client_secret.json
+token.json
+settings.json
+
+# pycache
+__pycache__/
+
+# temp files
+final_webcam_image.png
+
+# vscode
+.vscode/

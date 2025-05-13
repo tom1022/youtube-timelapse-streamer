@@ -1,0 +1,22 @@
+# YouTube Live Streaming System Requirements
+# Web Framework
+Flask
+Flask-WTF
+WTForms
+
+# Image Processing
+opencv-python
+Pillow
+
+# Google API
+google-api-python-client
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+
+# Twitter API
+tweepy
+
+# Other Utilities
+numpy
+python-dotenv

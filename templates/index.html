@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>配信設定画面</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+</head>
+
+<body>
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <p class="title">
+                配信設定画面
+            </p>
+            <p class="subtitle">
+                {{ subtitle }}
+            </p>
+        </div>
+    </section>
+    <div class="columns mt-1">
+        <div class="is-1 is-desktop column"></div>
+        <div class="column">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="notification is-{{ category }}">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <div class="columns">
+                <div class="column is-8">
+                    <h2 class="title">画面イメージ</h2>
+                    <img src="/static/display.png">
+                </div>
+                <div class="column">
+                    <button onclick="location.href='{{ url_for('start_stream') }}';" class="button is-info is-large is-fullwidth m-3" id="start">配信開始</button>
+                    <button onclick="location.href='{{ url_for('stop_stream') }}';" class="button is-danger is-large is-fullwidth m-3" id="stop">配信停止</button>
+                    {% if stream_exsists %}
+                    <h2 class="title is-danger-text">配信中</h2>
+                    <a href="{{ stream_url }}">{{ stream_url }}</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="columns mt-2">
+                <div class="column">
+                    <h2 class="title">配信設定</h2>
+                    <form action="{{ url_for('update_stream_settings') }}" method="post">
+                        {{ stream_form.csrf_token }}
+                        <div class="field">
+                            <label class="label">{{ stream_form.title.label }}</label>
+                            <div class="control">
+                                {{ stream_form.title(class_="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ stream_form.description.label }}</label>
+                            <div class="control">
+                                {{ stream_form.description(class_="textarea", rows=3) }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ stream_form.privacy.label }}</label>
+                            <div class="select">{{ stream_form.privacy() }}</div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ stream_form.interval.label }}</label>
+                            <div class="control">
+                                {{ stream_form.interval(class_="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ stream_form.resolution.label }}</label>
+                            <div class="select">{{ stream_form.resolution() }}</div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ stream_form.fps.label }}</label>
+                            <div class="control">
+                                {{ stream_form.fps(class_="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                {{ stream_form.submit(class_="button is-primary") }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="column">
+                    <h2 class="title">画面設定</h2>
+                    <form action="{{ url_for('update_display_settings') }}" method="post">
+                        {{ display_form.csrf_token }}
+                        <div class="field">
+                            <label class="label">{{ display_form.lower_text.label }}</label>
+                            <div class="control">
+                                {{ display_form.lower_text(class_="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ display_form.right_long_text.label }}</label>
+                            <div class="control">
+                                {{ display_form.right_long_text(class_="textarea", rows=15) }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ display_form.grayscale.label }}</label>
+                            <div class="control">
+                                {{ display_form.grayscale(class_="checkbox") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">{{ display_form.mosaic_size.label }}</label>
+                            <div class="control">
+                                {{ display_form.mosaic_size(class_="input") }}
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                {{ display_form.submit(class_="button is-primary") }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="is-1 is-desktop column"></div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            if ({{ stream_exsists | lower }}) {
+                $('form[action="{{ url_for('update_stream_settings') }}"]').find('input, textarea, select, button').prop('disabled', true);
+                $('button#start').prop('disabled', true);
+                $('button#stop').prop('disabled', false);
+            } else {
+                $('form[action="{{ url_for('update_stream_settings') }}"]').find('input, textarea, select, button').prop('disabled', false);
+                $('button#start').prop('disabled', false);
+                $('button#stop').prop('disabled', true);
+            }
+        });
+    </script>
+</body>
+</html>
