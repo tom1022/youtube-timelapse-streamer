@@ -46,7 +46,7 @@ class LiveStreamer:
         )
         tweet_stream_info(
             contents={
-                "comment": settings.get("title", "配信開始しました！"),
+                "comment": settings["youtube"].get("title", "配信開始しました！"),
                 "url": youtube_watch_url
             }
         )
